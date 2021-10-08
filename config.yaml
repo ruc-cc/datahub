@@ -1,0 +1,23 @@
+singleuser:
+  defaultUrl: "/lab"
+
+proxy:
+  service:
+    type: NodePort
+    nodePorts:
+      http: 31258
+
+hub:
+  config:
+    GenericOAuthenticator:
+      client_id: 615fb0b790f4d11722114a2e.ruc
+      client_secret: TRq-U7ysS9uempUwjzlMOoa20qROLjeFg48qakdsHB0
+      oauth_callback_url: http://10.77.80.242:31258/hub/oauth_callback
+      authorize_url: https://v.ruc.edu.cn/oauth2/authorize
+      token_url: https://v.ruc.edu.cn/oauth2/token
+      userdata_url: https://v.ruc.edu.cn/apis/oauth2/v1/user
+      scope:
+        - profile
+      username_key: uid
+    JupyterHub:
+      authenticator_class: generic-oauth
