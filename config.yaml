@@ -1,14 +1,23 @@
 singleuser:
+  # 设置为jupyterlab页面
   defaultUrl: "/lab"
+  # 设置镜像
+  image:
+    name: jiangliuyang/datahub
+    tag: latest
+  # 设定用户为datahub
+  uid: 1001
 
 proxy:
   service:
     type: NodePort
+    # 设置端口号
     nodePorts:
       http: 31258
 
 hub:
   config:
+    # 微人大OAuth设置
     GenericOAuthenticator:
       client_id: 615fb0b790f4d11722114a2e.ruc
       client_secret: TRq-U7ysS9uempUwjzlMOoa20qROLjeFg48qakdsHB0
