@@ -1,0 +1,2 @@
+kubectl delete namespaces jupyterhub
+
