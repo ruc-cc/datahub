@@ -28,19 +28,20 @@ imagePullSecrets: []
 hub:
   config:
     GenericOAuthenticator:
-      client_id: 615fb0b790f4d11722114a2e.ruc
-      client_secret: TRq-U7ysS9uempUwjzlMOoa20qROLjeFg48qakdsHB0
-      oauth_callback_url: http://10.77.80.242:31258/hub/oauth_callback
+      client_id: 617f31ca90f4d1172239d1d4.ruc
+      client_secret: -gb4CAWwQ-GfpnFOAN_f-RnogVsOwHRTrnq-vib2JE0
+      oauth_callback_url: http://datahub.ruc.edu.cn/hub/oauth_callback
       authorize_url: https://v.ruc.edu.cn/oauth2/authorize
       token_url: https://v.ruc.edu.cn/oauth2/token
       userdata_url: https://v.ruc.edu.cn/apis/oauth2/v1/user
       scope:
         - profile
       username_key: uid
+      login_service: RUC Account
     JupyterHub:
       admin_access: true
-      # authenticator_class: generic-oauth
-      authenticator_class: dummy
+      authenticator_class: generic-oauth
+      # authenticator_class: dummy
   service:
     type: ClusterIP
     annotations: {}
@@ -50,7 +51,34 @@ hub:
     loadBalancerIP:
   baseUrl: /
   cookieSecret:
-  initContainers: []
+  # initContainers: []
+  # clone custom JupyterHub templates into a volume
+  initContainers:
+    - name: git-clone-templates
+      image: alpine/git
+      args:
+        - clone
+        - --single-branch
+        - --branch=k8s
+        - --depth=1
+        - --
+        # - https://github.com/berkeley-dsep-infra/datahub-homepage
+        - https://github.com/ruc-cc/datahub-homepage
+        - /etc/jupyterhub/custom
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+        - name: custom-templates
+          mountPath: /etc/jupyterhub/custom
+  extraVolumes:
+    - name: custom-templates
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: custom-templates
+      mountPath: /etc/jupyterhub/custom
+  extraConfig:
+    templates: |
+      c.JupyterHub.template_paths = ['/etc/jupyterhub/custom/templates']
   fsGid: 1000
   nodeSelector: {}
   tolerations: []
@@ -76,12 +104,12 @@ hub:
   annotations: {}
   command: []
   args: []
-  extraConfig: {}
+  # extraConfig: {}
   extraFiles: {}
   extraEnv: {}
   extraContainers: []
-  extraVolumes: []
-  extraVolumeMounts: []
+  # extraVolumes: []
+  # extraVolumeMounts: []
   image:
     name: jupyterhub/k8s-hub
     tag: "1.1.3"
@@ -139,7 +167,6 @@ hub:
 rbac:
   enabled: true
 
-
 proxy:
   secretToken:
   annotations: {}
@@ -147,11 +174,11 @@ proxy:
     type: Recreate
   rollingUpdate:
   service:
-    type:  ClusterIP
+    type: ClusterIP
     labels: {}
     annotations: {}
     nodePorts:
-      http: 
+      http:
       https:
     disableHttpPort: false
     extraPorts: []
@@ -280,13 +307,13 @@ singleuser:
   nodeSelector: {}
   extraNodeAffinity:
     preferred:
-        - weight: 1
-          preference:
-            matchExpressions:
+      - weight: 1
+        preference:
+          matchExpressions:
             - key: NodeType
               operator: NotIn
               values:
-              - master
+                - master
   extraPodAffinity:
     required: []
     preferred: []
@@ -330,13 +357,14 @@ singleuser:
   lifecycleHooks: {}
   initContainers: []
   extraContainers: []
-  uid: 1000
+  # uid: 1000
+  uid: 1001
   fsGid: 100
   serviceAccountName:
   storage:
     type: dynamic
     extraLabels: {}
-    extraVolumes: 
+    extraVolumes:
       - name: sharing
         persistentVolumeClaim:
           claimName: sharing
@@ -354,8 +382,10 @@ singleuser:
       volumeNameTemplate: volume-{username}{servername}
       storageAccessModes: [ReadWriteOnce]
   image:
-    name: jupyterhub/k8s-singleuser-sample
-    tag: "1.1.3"
+    name: jiangliuyang/datahub
+    tag: 1.1.3
+    # name: jupyterhub/k8s-singleuser-sample
+    # tag: "1.1.3"
     pullPolicy:
     pullSecrets: []
   startTimeout: 300
