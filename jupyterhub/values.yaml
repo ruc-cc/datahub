@@ -104,12 +104,12 @@ hub:
   annotations: {}
   command: []
   args: []
-  extraConfig: {}
+  # extraConfig: {}
   extraFiles: {}
   extraEnv: {}
   extraContainers: []
-  extraVolumes: []
-  extraVolumeMounts: []
+  # extraVolumes: []
+  # extraVolumeMounts: []
   image:
     name: jupyterhub/k8s-hub
     tag: "1.1.3"
