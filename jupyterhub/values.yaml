@@ -51,7 +51,34 @@ hub:
     loadBalancerIP:
   baseUrl: /
   cookieSecret:
-  initContainers: []
+  # initContainers: []
+  # clone custom JupyterHub templates into a volume
+  initContainers:
+    - name: git-clone-templates
+      image: alpine/git
+      args:
+        - clone
+        - --single-branch
+        - --branch=k8s
+        - --depth=1
+        - --
+        # - https://github.com/berkeley-dsep-infra/datahub-homepage
+        - https://github.com/ruc-cc/datahub-homepage
+        - /etc/jupyterhub/custom
+      securityContext:
+        runAsUser: 0
+      volumeMounts:
+        - name: custom-templates
+          mountPath: /etc/jupyterhub/custom
+  extraVolumes:
+    - name: custom-templates
+      emptyDir: {}
+  extraVolumeMounts:
+    - name: custom-templates
+      mountPath: /etc/jupyterhub/custom
+  extraConfig:
+    templates: |
+      c.JupyterHub.template_paths = ['/etc/jupyterhub/custom/templates']
   fsGid: 1000
   nodeSelector: {}
   tolerations: []
@@ -328,34 +355,7 @@ singleuser:
   extraFiles: {}
   extraEnv: {}
   lifecycleHooks: {}
-  # initContainers: []
-  # clone custom JupyterHub templates into a volume
-  initContainers:
-    - name: git-clone-templates
-      image: alpine/git
-      args:
-        - clone
-        - --single-branch
-        - --branch=k8s
-        - --depth=1
-        - --
-        # - https://github.com/berkeley-dsep-infra/datahub-homepage
-        - https://github.com/ruc-cc/datahub-homepage
-        - /etc/jupyterhub/custom
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-        - name: custom-templates
-          mountPath: /etc/jupyterhub/custom
-  extraVolumes:
-    - name: custom-templates
-      emptyDir: {}
-  extraVolumeMounts:
-    - name: custom-templates
-      mountPath: /etc/jupyterhub/custom
-  extraConfig:
-    templates: |
-      c.JupyterHub.template_paths = ['/etc/jupyterhub/custom/templates']
+  initContainers: []
   extraContainers: []
   # uid: 1000
   uid: 1001
