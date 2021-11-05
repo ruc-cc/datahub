@@ -28,8 +28,8 @@ imagePullSecrets: []
 hub:
   config:
     GenericOAuthenticator:
-      client_id: 617f31ca90f4d1172239d1d4.ruc
-      client_secret: -gb4CAWwQ-GfpnFOAN_f-RnogVsOwHRTrnq-vib2JE0
+      client_id: 6183cce890f4d1172240b0ac.ruc
+      client_secret: VkXQmGqUT3-vJT8jJzDmzNos20wxqnC-cxUNclm53Rc
       oauth_callback_url: http://datahub.ruc.edu.cn/hub/oauth_callback
       authorize_url: https://v.ruc.edu.cn/oauth2/authorize
       token_url: https://v.ruc.edu.cn/oauth2/token
