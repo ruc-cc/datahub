@@ -357,8 +357,7 @@ singleuser:
   lifecycleHooks: {}
   initContainers: []
   extraContainers: []
-  # uid: 1000
-  uid: 1001
+  uid: 1000
   fsGid: 100
   serviceAccountName:
   storage:
@@ -369,13 +368,13 @@ singleuser:
         persistentVolumeClaim:
           claimName: sharing
     extraVolumeMounts:
-      - mountPath: "/home/jovyan/share"
+      - mountPath: "/home/datahub/share"
         name: sharing
     static:
       pvcName:
       subPath: "{username}"
     capacity: 10Gi
-    homeMountPath: /home/jovyan
+    homeMountPath: /home/datahub
     dynamic:
       storageClass: rook-cephfs
       pvcNameTemplate: claim-{username}{servername}
