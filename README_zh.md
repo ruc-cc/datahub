@@ -22,22 +22,20 @@
 
 ### JupyterHub
 
-### Dockerfile
+### Datahub Notebook
 
-从 jupyterhub/k8s-singleuser-sample:1.1.3 镜像，创建新用户为 datahub，用户 UID 为 1001（jovyan 的用户 UID 为 1000）。
+从 [base-notebook](https://github.com/jupyter/docker-stacks/tree/master/base-notebook) 的 dockerfile 构建 datahub 镜像，修改用户名 `jovyan` 为 `datahub`，用户 UID 等保持不变。
 
 已发布在https://hub.docker.com/repository/docker/jiangliuyang/datahub
 
-设置 config.yaml
+设置 jupyterhub/values.yaml
 
 ```yaml
 singleuser:
   # 设置镜像
   image:
     name: jiangliuyang/datahub
-    tag: latest
-  # 设定用户为datahub
-  uid: 1001
+    tag: 1.1.3.2
 ```
 
 ### Ceph
