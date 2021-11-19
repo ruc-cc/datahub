@@ -2,7 +2,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-  #  nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/secure-backends: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+   # nginx.ingress.kubernetes.io/ssl-redirect: "true"
   name: datahub
   namespace: jupyterhub
 spec:
@@ -11,10 +13,14 @@ spec:
     - host: datahub.ruc.edu.cn
       http:
         paths:
-          - path: /
+          - path: / 
             pathType: Prefix
             backend:
               service:  
-                name: proxy-public
+                name: nginx-svc
                 port: 
-                  number: 80
+                  number: 443
+  tls:
+    - hosts:
+        - datahub.ruc.edu.cn
+      secretName: datahub-tls

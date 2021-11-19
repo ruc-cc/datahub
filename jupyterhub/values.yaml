@@ -95,7 +95,7 @@ hub:
       selector: {}
       accessModes:
         - ReadWriteOnce
-      storage: 5Gi
+      storage: 50Gi
       subPath:
       storageClassName: rook-cephfs
     url:
@@ -179,8 +179,8 @@ proxy:
     annotations: {}
     nodePorts:
       http:
-      https:
-    disableHttpPort: false
+      https: 
+    disableHttpPort: true
     extraPorts: []
     loadBalancerIP:
     loadBalancerSourceRanges: []
@@ -263,7 +263,7 @@ proxy:
             - ipBlock:
                 cidr: 0.0.0.0/0
       interNamespaceAccessLabels: ignore
-      allowedIngressPorts: [http, https]
+      allowedIngressPorts: [http,https]
     pdb:
       enabled: false
       maxUnavailable:
@@ -284,20 +284,19 @@ proxy:
     resources: {}
   labels: {}
   https:
-    enabled: false
-    type: letsencrypt
-
+    enabled: true
+    type: secret
+    hosts: []
+    secret:
+      name: datahub-tls
+      key: tls.key
+      crt: tls.crt
     letsencrypt:
       contactEmail:
       acmeServer: https://acme-v02.api.letsencrypt.org/directory
     manual:
       key:
       cert:
-    secret:
-      name:
-      key: tls.key
-      crt: tls.crt
-    hosts: []
 
 # singleuser relates to the configuration of KubeSpawner which runs in the hub
 # pod, and its spawning of user pods such as jupyter-myusername.
@@ -553,12 +552,19 @@ prePuller:
 
 ingress:
   enabled: false
-  annotations: {}
-  ingressClassName:
-  hosts: []
-  pathSuffix:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    ingress.bluemix.net/redirect-to-https: "True"
+    kubernetes.io/ingress.class: nginx
+  #ingressClassName: nginx
+  hosts: 
+    - datahub.ruc.edu.cn
+  pathSuffix: 
   pathType: Prefix
-  tls: []
+  tls: 
+    - hosts:
+        - datahub.ruc.edu.cn
+      secretName: datahub-tls
 
 # cull relates to the jupyterhub-idle-culler service, responsible for evicting
 # inactive singleuser pods.

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx
+  namespace: jupyterhub
+spec:
+  selector:
+    matchLabels:
+      app: nginx 
+  template:
+    metadata:
+      labels:
+        app: nginx 
+    spec:
+      containers:
+      - name: nginx 
+        image: nginx:1.21.4
+        imagePullPolicy: IfNotPresent  
+        ports:
+          - name: https 
+            containerPort: 443
+            protocol: TCP
+        #  - name: http
+        #    containerPort: 80
+        #    protocol: TCP
+        volumeMounts:
+          - name: nginx-cm
+            mountPath: /etc/nginx/nginx.conf
+            subPath: nginx.conf
+          - name: datahub-tls
+            mountPath: /etc/cert
+        resources:    
+          limits:  
+            cpu: 2000m
+            memory: 1024Mi
+          requests:  
+            cpu: 500m
+            memory: 512Mi
+      nodeSelector:
+        ingress: "true"
+      volumes:
+        - name: nginx-cm
+          configMap:
+            name: nginx-cm
+        - name: datahub-tls
+          secret:
+            secretName: datahub-tls
