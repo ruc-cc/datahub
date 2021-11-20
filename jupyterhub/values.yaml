@@ -179,7 +179,7 @@ proxy:
     annotations: {}
     nodePorts:
       http:
-      https: 
+      https:
     disableHttpPort: true
     extraPorts: []
     loadBalancerIP:
@@ -263,7 +263,7 @@ proxy:
             - ipBlock:
                 cidr: 0.0.0.0/0
       interNamespaceAccessLabels: ignore
-      allowedIngressPorts: [http,https]
+      allowedIngressPorts: [http, https]
     pdb:
       enabled: false
       maxUnavailable:
@@ -381,7 +381,7 @@ singleuser:
       storageAccessModes: [ReadWriteOnce]
   image:
     name: jiangliuyang/datahub
-    tag: 1.1.3.2
+    tag: 1.1.3.3
     # name: jupyterhub/k8s-singleuser-sample
     # tag: "1.1.3"
     pullPolicy:
@@ -557,11 +557,11 @@ ingress:
     ingress.bluemix.net/redirect-to-https: "True"
     kubernetes.io/ingress.class: nginx
   #ingressClassName: nginx
-  hosts: 
+  hosts:
     - datahub.ruc.edu.cn
-  pathSuffix: 
+  pathSuffix:
   pathType: Prefix
-  tls: 
+  tls:
     - hosts:
         - datahub.ruc.edu.cn
       secretName: datahub-tls
