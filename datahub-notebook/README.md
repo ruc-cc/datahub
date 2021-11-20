@@ -13,17 +13,18 @@ Please visit the project documentation site for help using and contributing to t
 
 # Reference
 
-See more information: [base-notebook](https://github.com/jupyter/docker-stacks/tree/master/base-notebook)
+See more information: [base-notebook](https://github.com/jupyter/docker-stacks/tree/master/base-notebook) & [singleuser-sample](https://github.com/jupyterhub/zero-to-jupyterhub-k8s/tree/main/images/singleuser-sample)
 
 # Change Log
 
 - Change username from `jovyan` to `datahub`.
+- Add the `nbgitpuller` extension.
 
 # Build
 
 ```bash
 # build image
-docker build -t {user-name}/{image-name}:{tag} .
+docker build --no-cache -t {user-name}/{image-name}:{tag} .
 # deploy image
 docker push {user-name}/{image-name}:{tag}
 ```
