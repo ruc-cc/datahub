@@ -63,7 +63,8 @@ hub:
         - --depth=1
         - --
         # - https://github.com/berkeley-dsep-infra/datahub-homepage
-        - https://github.com/ruc-cc/datahub-homepage
+        # - https://github.com/ruc-cc/datahub-homepage
+        - https://gitee.com/jiangliuyang/datahub-homepage
         - /etc/jupyterhub/custom
       securityContext:
         runAsUser: 0
