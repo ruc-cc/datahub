@@ -381,7 +381,7 @@ singleuser:
       storageAccessModes: [ReadWriteOnce]
   image:
     name: jiangliuyang/datahub
-    tag: 1.1.3.3
+    tag: 1.1.3.4
     # name: jupyterhub/k8s-singleuser-sample
     # tag: "1.1.3"
     pullPolicy:
