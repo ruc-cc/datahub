@@ -3,3 +3,6 @@
 
 jupyterhub==2.0.0rc3
 nbgitpuller==1.0.2
+numpy
+pandas
+matplotlib

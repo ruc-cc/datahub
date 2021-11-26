@@ -12,6 +12,7 @@ FROM $ROOT_CONTAINER
 
 LABEL maintainer="Jupyter Project <jupyter@googlegroups.com>"
 ARG NB_USER="datahub"
+ARG NB_USER_PASSWD="datahub"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
@@ -24,6 +25,10 @@ USER root
 # features (e.g., download as all possible file formats)
 # Install tini: init for containers
 ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update --yes && \
+    apt-get install --yes --fix-missing --no-install-recommends build-essential
+
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \
     tini \
@@ -32,6 +37,9 @@ RUN apt-get update --yes && \
     sudo \
     locales \
     fonts-liberation \
+    dnsutils \
+    git \
+    iputils-ping \
     run-one && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -70,6 +78,9 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions "${HOME}" && \
     fix-permissions "${CONDA_DIR}"
+
+RUN echo "${NB_USER}:${NB_USER_PASSWD}" | chpasswd && \
+    echo "${NB_USER} ALL=(ALL) ALL" >> /etc/sudoers
 
 USER ${NB_UID}
 ARG PYTHON_VERSION=default
@@ -169,14 +180,15 @@ WORKDIR "${HOME}"
 
 # Example install of git and nbgitpuller.
 # NOTE: git is already available in the jupyter/minimal-notebook image.
-USER root
-RUN apt-get update \
- && apt-get upgrade -y \
- && apt-get install -y --no-install-recommends \
-        dnsutils \
-        git \
-        iputils-ping \
- && rm -rf /var/lib/apt/lists/*
+# USER root
+# RUN apt-get update \
+#  && apt-get upgrade -y \
+#  && apt-get install -y --no-install-recommends \
+#         dnsutils \
+#         git \
+#         iputils-ping \
+#  && rm -rf /var/lib/apt/lists/*
+
 USER $NB_USER
 
 COPY requirements.txt /tmp/requirements.txt
