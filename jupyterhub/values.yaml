@@ -34,8 +34,14 @@ hub:
       authorize_url: https://v.ruc.edu.cn/oauth2/authorize
       token_url: https://v.ruc.edu.cn/oauth2/token
       userdata_url: https://v.ruc.edu.cn/apis/oauth2/v1/user
-      scope:
-        - profile
+     # scope:
+     #   - profile
+      scopes:
+        - "read_api"
+        - "read_user"
+        - "profile"
+        - "email"
+        - "openid"
       username_key: uid
       login_service: RUC Account
     JupyterHub:
