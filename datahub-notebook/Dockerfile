@@ -207,4 +207,7 @@ RUN jupyter serverextension enable --py nbgitpuller --sys-prefix
 # Uncomment the line below to make nbgitpuller default to start up in JupyterLab
 ENV NBGITPULLER_APP=lab
 
+# https://github.com/jupyterhub/nbgitpuller/issues/235
+RUN cp /opt/conda/lib/python3.9/site-packages/nbgitpuller/templates/status.html /opt/conda/lib/python3.9/site-packages/notebook/templates/status.html
+
 # conda/pip/apt install additional packages here, if desired.
