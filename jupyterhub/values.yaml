@@ -63,6 +63,7 @@ hub:
   initContainers:
     - name: git-clone-templates
       image: alpine/git
+      imagePullPolicy: IfNotPresent
       args:
         - clone
         - --single-branch
@@ -362,8 +363,8 @@ singleuser:
   extraFiles: {}
   extraEnv: {}
   lifecycleHooks: {}
+  extraContainers: [] 
   initContainers: []
-  extraContainers: []
   uid: 1000
   fsGid: 100
   serviceAccountName:
@@ -585,8 +586,8 @@ cull:
   enabled: true
   users: false # --cull-users
   removeNamedServers: false # --remove-named-servers
-  timeout: 3600 # --timeout
-  every: 600 # --cull-every
+  timeout: 300 # --timeout
+  every: 150 # --cull-every
   concurrency: 10 # --concurrency
   maxAge: 0 # --max-age
 
