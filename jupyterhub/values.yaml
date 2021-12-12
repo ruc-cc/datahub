@@ -5,7 +5,14 @@ nameOverride:
 
 # custom can contain anything you want to pass to the hub pod, as all passed
 # Helm template values will be made available there.
-custom: {}
+custom: 
+  admin_extra_config:
+    extraVolumeMounts:
+      - name: sharing
+        mountPath: /home/datahub/share-readAndwrite
+    adminUser:
+      - 6115e69890f4d162e19dd5c0
+      - "11813933"  # It's all numbers and you need to put double quotes around it
 
 # imagePullSecret is configuration to create a k8s Secret that Helm chart's pods
 # can get credentials from to pull their images.
@@ -48,6 +55,8 @@ hub:
     JupyterHub:
       admin_access: true
       authenticator_class: generic-oauth
+      admin_users:
+        - 6115e69890f4d162e19dd5c0
       # authenticator_class: dummy
   service:
     type: ClusterIP
@@ -88,6 +97,31 @@ hub:
   extraConfig:
     templates: |
       c.JupyterHub.template_paths = ['/etc/jupyterhub/custom/templates']
+    Spawner: |
+      import os
+      from kubespawner import KubeSpawner
+      import z2jh
+
+      class ExtraSpawner(KubeSpawner):
+        async def start(self):
+          isOrnot_admin = False
+          # Get the content from the custom.admin_extra_config field
+          admin_extra_config = z2jh.get_config('custom.admin_extra_config', {})
+          adminUser = admin_extra_config.get('adminUser', [])
+          extraVolumeMounts = admin_extra_config.get('extraVolumeMounts', [])
+          # Check whether the current user is admin
+          isOrnot_admin |= (self.user.name in adminUser)
+
+          # Add a read/write folder to admin
+          if isOrnot_admin:
+            self.volume_mounts += extraVolumeMounts
+          #print(self.user.name)
+          #print(isOrnot_admin)
+          # kubespawner.start()
+          return (await super().start())
+
+      c.JupyterHub.spawner_class = ExtraSpawner
+
   fsGid: 1000
   nodeSelector: {}
   tolerations: []
@@ -378,6 +412,7 @@ singleuser:
     extraVolumeMounts:
       - mountPath: "/home/datahub/share"
         name: sharing
+        readOnly: true  #deaflut AccessMode for everyone
     static:
       pvcName:
       subPath: "{username}"
