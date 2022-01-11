@@ -13,7 +13,7 @@ custom:
     adminUser:
       - 6115e69890f4d162e19dd5c0
       - "11813933"  # It's all numbers and you need to put double quotes around it
-
+      - "11711806"
 # imagePullSecret is configuration to create a k8s Secret that Helm chart's pods
 # can get credentials from to pull their images.
 imagePullSecret:
@@ -97,7 +97,7 @@ hub:
   extraConfig:
     templates: |
       c.JupyterHub.template_paths = ['/etc/jupyterhub/custom/templates']
-    Spawner: |
+    pawner: |
       import os
       from kubespawner import KubeSpawner
       import z2jh
@@ -115,14 +115,11 @@ hub:
           # Add a read/write folder to admin
           if isOrnot_admin:
             self.volume_mounts += extraVolumeMounts
-          #print(self.user.name)
-          #print(isOrnot_admin)
+
           # kubespawner.start()
           return (await super().start())
 
       c.JupyterHub.spawner_class = ExtraSpawner
-
-  fsGid: 1000
   nodeSelector: {}
   tolerations: []
   concurrentSpawnLimit: 100
@@ -161,9 +158,9 @@ hub:
   resources:
     requests:
       cpu: 0.01
-      memory: 256M
+      memory: 1G
     limits:
-      memory: 2G
+      memory: 16G
   containerSecurityContext:
     runAsUser: 1000
     runAsGroup: 1000
@@ -409,14 +406,15 @@ singleuser:
       - name: sharing
         persistentVolumeClaim:
           claimName: sharing
+          #readOnly: true  #deaflut AccessMode for everyone
     extraVolumeMounts:
       - mountPath: "/home/datahub/share"
         name: sharing
-        readOnly: true  #deaflut AccessMode for everyone
+        readOnly: true #deaflut AccessMode for everyone
     static:
       pvcName:
       subPath: "{username}"
-    capacity: 10Gi
+    capacity: 30Gi
     homeMountPath: /home/datahub
     dynamic:
       storageClass: rook-cephfs
@@ -435,7 +433,7 @@ singleuser:
     limit: 2.0
     guarantee: 0.5
   memory:
-    limit: 2G
+    limit: 8G
     guarantee: 512M
   extraResource:
     limits: {}
@@ -449,7 +447,7 @@ singleuser:
 scheduling:
   userScheduler:
     enabled: true
-    replicas: 2
+    replicas: 5
     logLevel: 4
     # plugins ref: https://kubernetes.io/docs/reference/scheduling/config/#scheduling-plugins-1
     plugins:
