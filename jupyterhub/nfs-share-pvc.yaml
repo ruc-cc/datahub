@@ -9,5 +9,5 @@ spec:
   resources:
     requests:
       storage: 3Gi
-  storageClassName: rook-cephfs
+  storageClassName: managed-nfs-storage
   volumeMode: Filesystem

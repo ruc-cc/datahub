@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -16,10 +16,12 @@ spec:
           - path: / 
             pathType: Prefix
             backend:
-              service:  
-                name: nginx-svc
-                port: 
-                  number: 443
+             # service:  
+             #   name: nginx-svc
+             #   port: 
+             #     number: 443
+             serviceName: nginx-svc
+             servicePort: 443
   tls:
     - hosts:
         - datahub.ruc.edu.cn

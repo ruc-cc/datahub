@@ -137,7 +137,7 @@ hub:
         - ReadWriteOnce
       storage: 50Gi
       subPath:
-      storageClassName: rook-cephfs
+      storageClassName: managed-nfs-storage
     url:
     password:
   labels: {}
@@ -218,7 +218,7 @@ proxy:
     labels: {}
     annotations: {}
     nodePorts:
-      http:
+      http: 
       https:
     disableHttpPort: true
     extraPorts: []
@@ -414,10 +414,10 @@ singleuser:
     static:
       pvcName:
       subPath: "{username}"
-    capacity: 30Gi
+    capacity: 50Gi
     homeMountPath: /home/datahub
     dynamic:
-      storageClass: rook-cephfs
+      storageClass: managed-nfs-storage
       pvcNameTemplate: claim-{username}{servername}
       volumeNameTemplate: volume-{username}{servername}
       storageAccessModes: [ReadWriteOnce]
@@ -433,7 +433,7 @@ singleuser:
     limit: 2.0
     guarantee: 0.5
   memory:
-    limit: 8G
+    limit: 4G
     guarantee: 512M
   extraResource:
     limits: {}
